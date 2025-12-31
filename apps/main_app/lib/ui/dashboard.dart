@@ -5,6 +5,7 @@ import 'package:main_app/habit_persistence.dart';
 import 'package:main_app/ui/insights_screen.dart';
 import 'package:main_app/ui/today_screen.dart';
 import 'package:main_app/ui/habits.dart';
+import 'package:main_app/ui/meditation.dart';
 import 'package:network_layer/network_layer.dart';
 import 'package:shared/shared.dart';
 
@@ -15,6 +16,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: const Text('Neon Habits'),
         actions: [
@@ -42,39 +44,47 @@ class DashboardScreen extends StatelessWidget {
         icon: const Icon(Icons.auto_awesome),
         label: const Text('Manage habits'),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF020617), Color(0xFF0F172A), Color(0xFF1D1B4C)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const _DashboardHeader(),
-                const SizedBox(height: 20),
-                const _ReminderNudgeBanner(),
-                const SizedBox(height: 24),
-                const _TodaySectionHeader(),
-                const SizedBox(height: 12),
-                const _TodayHabitsPreview(),
-                const SizedBox(height: 24),
-                _InsightsButton(
-                  onTap: () {
-                    Navigator.of(
-                      context,
-                    ).push(MaterialPageRoute<void>(builder: (_) => const InsightsScreen()));
-                  },
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF020617), Color(0xFF0F172A), Color(0xFF1D1B4C)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-              ],
+              ),
             ),
           ),
-        ),
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const _DashboardHeader(),
+                  const SizedBox(height: 20),
+                  const _ReminderNudgeBanner(),
+                  const SizedBox(height: 24),
+                  const _TodaySectionHeader(),
+                  const SizedBox(height: 12),
+                  const _TodayHabitsPreview(),
+                  const SizedBox(height: 24),
+                  const _MeditationCard(),
+                  const SizedBox(height: 24),
+                  _InsightsButton(
+                    onTap: () {
+                      Navigator.of(
+                        context,
+                      ).push(MaterialPageRoute<void>(builder: (_) => const InsightsScreen()));
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -194,12 +204,21 @@ class _TodaySectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text('Today', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Align(alignment: Alignment.centerRight, child: const _HabitSummary()),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Today', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            Text(
+              'Completed snapshot of your daily glow‑ups.',
+              style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.7)),
+            ),
+          ],
         ),
+        const Spacer(),
+        const _HabitSummary(),
       ],
     );
   }
@@ -287,6 +306,7 @@ class _InsightsButton extends StatelessWidget {
     final todayHabits = habitService.getTodayHabits();
     final total = todayHabits.length;
     final completed = todayHabits.where((h) => h.completed).length;
+    final completionRatio = total == 0 ? 0.0 : completed / total;
 
     final summaryText = total == 0
         ? 'No habits logged yet – start a streak today.'
@@ -300,16 +320,17 @@ class _InsightsButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: const LinearGradient(
-            colors: [Color(0xFF22D3EE), Color(0xFF6366F1)],
+            colors: [Color(0xFF020617), Color(0xFF020617), Color(0xFF111827)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
+          border: Border.all(color: const Color(0xFF6366F1).withOpacity(0.55)),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF22D3EE).withOpacity(0.4),
-              blurRadius: 24,
-              spreadRadius: -8,
-              offset: const Offset(0, 18),
+              color: const Color(0xFF6366F1).withOpacity(0.45),
+              blurRadius: 26,
+              spreadRadius: -10,
+              offset: const Offset(0, 20),
             ),
           ],
         ),
@@ -319,9 +340,17 @@ class _InsightsButton extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.black.withOpacity(0.18),
+                gradient: const LinearGradient(colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)]),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF6366F1).withOpacity(0.5),
+                    blurRadius: 22,
+                    spreadRadius: -8,
+                    offset: const Offset(0, 16),
+                  ),
+                ],
               ),
-              child: const Icon(Icons.insights_rounded, color: Colors.white, size: 20),
+              child: const Icon(Icons.insights_rounded, color: Colors.black, size: 20),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -341,14 +370,39 @@ class _InsightsButton extends StatelessWidget {
                     'Streaks, calendar, and habit trends in one place.',
                     style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.9)),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    summaryText,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.white.withOpacity(0.9),
-                      fontWeight: FontWeight.w600,
-                    ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              summaryText,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.white.withOpacity(0.92),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            SizedBox(
+                              height: 4,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(999),
+                                child: LinearProgressIndicator(
+                                  value: completionRatio.clamp(0, 1),
+                                  backgroundColor: Colors.white.withOpacity(0.12),
+                                  valueColor: const AlwaysStoppedAnimation<Color>(
+                                    Color(0xFF22D3EE),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -357,7 +411,7 @@ class _InsightsButton extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.16),
+                color: Colors.white.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(999),
               ),
               child: const Row(
@@ -406,17 +460,17 @@ class _TodayHabitsPreview extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: const LinearGradient(
-            colors: [Color(0xFF0B1120), Color(0xFF111827)],
+            colors: [Color(0xFF020617), Color(0xFF020617), Color(0xFF111827)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          border: Border.all(color: const Color(0xFF6366F1).withOpacity(0.6)),
+          border: Border.all(color: const Color(0xFF22D3EE).withOpacity(0.55)),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF6366F1).withOpacity(0.4),
-              blurRadius: 24,
-              spreadRadius: -10,
-              offset: const Offset(0, 18),
+              color: const Color(0xFF22D3EE).withOpacity(0.45),
+              blurRadius: 28,
+              spreadRadius: -12,
+              offset: const Offset(0, 22),
             ),
           ],
         ),
@@ -433,9 +487,9 @@ class _TodayHabitsPreview extends StatelessWidget {
                     boxShadow: [
                       BoxShadow(
                         color: const Color(0xFF22D3EE).withOpacity(0.5),
-                        blurRadius: 20,
-                        spreadRadius: -6,
-                        offset: const Offset(0, 12),
+                        blurRadius: 22,
+                        spreadRadius: -8,
+                        offset: const Offset(0, 16),
                       ),
                     ],
                   ),
@@ -466,8 +520,8 @@ class _TodayHabitsPreview extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      color: Colors.black.withOpacity(0.25),
-                      border: Border.all(color: Colors.white.withOpacity(0.16)),
+                      color: Colors.black.withOpacity(0.28),
+                      border: Border.all(color: Colors.white.withOpacity(0.18)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -479,14 +533,14 @@ class _TodayHabitsPreview extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         SizedBox(
-                          width: 80,
-                          height: 4,
+                          width: 82,
+                          height: 5,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(999),
                             child: LinearProgressIndicator(
                               value: completionRatio.clamp(0, 1),
                               backgroundColor: Colors.white.withOpacity(0.12),
-                              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF22D3EE)),
+                              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF4ADE80)),
                             ),
                           ),
                         ),
@@ -535,6 +589,102 @@ class _TodayHabitsPreview extends StatelessWidget {
   }
 }
 
+class _MeditationCard extends StatelessWidget {
+  const _MeditationCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(24),
+      onTap: () {
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute<void>(builder: (_) => const MeditationScreen()));
+      },
+      child: Ink(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          gradient: const LinearGradient(
+            colors: [Color(0xFF0B1120), Color(0xFF111827), Color(0xFF1E1B4B)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          border: Border.all(color: const Color(0xFFA855F7).withOpacity(0.6)),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFA855F7).withOpacity(0.5),
+              blurRadius: 26,
+              spreadRadius: -10,
+              offset: const Offset(0, 22),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: const LinearGradient(colors: [Color(0xFFA855F7), Color(0xFF6366F1)]),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFA855F7).withOpacity(0.6),
+                    blurRadius: 24,
+                    spreadRadius: -10,
+                    offset: const Offset(0, 18),
+                  ),
+                ],
+              ),
+              child: const Icon(Icons.self_improvement, color: Colors.black, size: 22),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Meditation',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Drop into a guided breathing timer for 5–60 minutes of focus and calm.',
+                    style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.82)),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.14),
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Open',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(width: 4),
+                  Icon(Icons.arrow_forward_rounded, size: 16, color: Colors.white),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _HabitSummary extends StatelessWidget {
   const _HabitSummary();
 
@@ -543,14 +693,110 @@ class _HabitSummary extends StatelessWidget {
     return BlocBuilder<HabitTrackerCubit, HabitTrackerState>(
       builder: (context, state) {
         if (state.isLoading) {
-          return const LinearProgressIndicator();
+          return SizedBox(
+            width: 96,
+            child: LinearProgressIndicator(
+              backgroundColor: Colors.white.withOpacity(0.08),
+              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF22D3EE)),
+            ),
+          );
         }
+
         if (state.totalHabits == 0) {
-          return const Text('No habits configured yet.');
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(999),
+              color: Colors.white.withOpacity(0.02),
+              border: Border.all(color: Colors.white.withOpacity(0.16)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.auto_awesome, size: 16, color: Colors.white.withOpacity(0.9)),
+                const SizedBox(width: 6),
+                const Text(
+                  'No habits yet',
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          );
         }
-        return Text(
-          'Completed ${state.completedHabits} of ${state.totalHabits} habits today',
-          style: const TextStyle(fontSize: 14),
+
+        final completionRatio = state.totalHabits == 0
+            ? 0.0
+            : state.completedHabits / state.totalHabits;
+
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(999),
+            gradient: const LinearGradient(
+              colors: [Color(0xFF22D3EE), Color(0xFF6366F1)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF22D3EE).withOpacity(0.4),
+                blurRadius: 18,
+                spreadRadius: -8,
+                offset: const Offset(0, 14),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.black.withOpacity(0.22),
+                ),
+                child: Center(
+                  child: Text(
+                    '${(completionRatio * 100).round()}%',
+                    style: const TextStyle(
+                      fontSize: 9,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${state.completedHabits} of ${state.totalHabits} done',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  SizedBox(
+                    width: 90,
+                    height: 3,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(999),
+                      child: LinearProgressIndicator(
+                        value: completionRatio.clamp(0, 1),
+                        backgroundColor: Colors.white.withOpacity(0.18),
+                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFBBF7D0)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       },
     );

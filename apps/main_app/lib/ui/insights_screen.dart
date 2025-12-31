@@ -109,6 +109,7 @@ class _HabitCalendar extends StatelessWidget {
                 dataSource: _CompletionDataSource(completionDays),
                 firstDayOfWeek: 1,
                 todayHighlightColor: const Color(0xFF22D3EE),
+                showNavigationArrow: true,
                 onSelectionChanged: (details) {
                   final date = details.date;
                   if (date != null) {
