@@ -31,7 +31,8 @@
         "network_layer",
         "shared",
         "shared_preferences",
-        "supabase_flutter"
+        "supabase_flutter",
+        "syncfusion_flutter_calendar"
       ],
       "devDependencies": [
         "build_runner",
@@ -232,6 +233,19 @@
         "web",
         "web_socket_channel",
         "yaml"
+      ]
+    },
+    {
+      "name": "syncfusion_flutter_calendar",
+      "version": "32.1.21",
+      "dependencies": [
+        "flutter",
+        "flutter_localizations",
+        "intl",
+        "syncfusion_flutter_core",
+        "syncfusion_flutter_datepicker",
+        "syncfusion_localizations",
+        "timezone"
       ]
     },
     {
@@ -873,6 +887,58 @@
         "stream_transform",
         "watcher",
         "web_socket_channel"
+      ]
+    },
+    {
+      "name": "syncfusion_localizations",
+      "version": "32.1.21",
+      "dependencies": [
+        "flutter",
+        "intl",
+        "syncfusion_flutter_core"
+      ]
+    },
+    {
+      "name": "syncfusion_flutter_datepicker",
+      "version": "32.1.21",
+      "dependencies": [
+        "flutter",
+        "intl",
+        "syncfusion_flutter_core"
+      ]
+    },
+    {
+      "name": "syncfusion_flutter_core",
+      "version": "32.1.21",
+      "dependencies": [
+        "flutter",
+        "vector_math"
+      ]
+    },
+    {
+      "name": "intl",
+      "version": "0.20.2",
+      "dependencies": [
+        "clock",
+        "meta",
+        "path"
+      ]
+    },
+    {
+      "name": "timezone",
+      "version": "0.10.1",
+      "dependencies": [
+        "http",
+        "path"
+      ]
+    },
+    {
+      "name": "flutter_localizations",
+      "version": "0.0.0",
+      "dependencies": [
+        "flutter",
+        "intl",
+        "path"
       ]
     },
     {

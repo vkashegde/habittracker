@@ -536,6 +536,12 @@ class HabitService {
     _repository.setAmountOn(habit.id, _today(), amount);
   }
 
+  /// Numeric amount recorded for [habit] on a specific [day] (0 if none).
+  int amountOnDate(Habit habit, DateTime day) {
+    final d = DateTime(day.year, day.month, day.day);
+    return _repository.getAmountOn(habit.id, d);
+  }
+
   /// Whether [habit] was completed on a specific calendar [day].
   bool isCompletedOnDate(Habit habit, DateTime day) {
     final d = DateTime(day.year, day.month, day.day);
@@ -547,6 +553,52 @@ class HabitService {
 
   /// Replace the current habit state from a JSON-safe map.
   void importState(Map<String, Object?> data) => _repository.importState(data);
+
+  /// All days on which the given [habit] was completed (normalized to Y/M/D).
+  Iterable<DateTime> completedDaysForHabit(Habit habit) =>
+      _repository.completedDays(habit.id);
+
+  /// Union of all completion days across all habits.
+  ///
+  /// Useful for calendar-style visualisations.
+  Set<DateTime> allCompletionDays() {
+    final result = <DateTime>{};
+    for (final habit in _repository.getHabits()) {
+      for (final day in _repository.completedDays(habit.id)) {
+        result.add(DateTime(day.year, day.month, day.day));
+      }
+    }
+    return result;
+  }
+
+  /// Habits with completion status for an arbitrary [day].
+  ///
+  /// Mirrors [getTodayHabits] but lets callers request historical insights.
+  List<TodayHabitStatus> habitsForDay(DateTime day) {
+    final d = DateTime(day.year, day.month, day.day);
+    return _repository
+        .getHabits()
+        .where((h) => h.schedule.isDueOn(d))
+        .map(
+          (h) => TodayHabitStatus(
+            habit: h,
+            completed: _repository.isCompletedOn(h.id, d),
+            amount: _repository.getAmountOn(h.id, d),
+          ),
+        )
+        .toList();
+  }
+
+  /// Returns true if there is at least one completion/amount logged on [day].
+  bool hasInsightsOnDate(DateTime day) {
+    final d = DateTime(day.year, day.month, day.day);
+    for (final habit in _repository.getHabits()) {
+      final completed = _repository.isCompletedOn(habit.id, d);
+      final amount = _repository.getAmountOn(habit.id, d);
+      if (completed || amount > 0) return true;
+    }
+    return false;
+  }
 
   /// Create a new habit with a generated id and add it to the repository.
   Habit createHabit({
@@ -602,13 +654,18 @@ class HabitService {
     _repository.toggleCompletedOn(habit.id, _today());
   }
 
-  /// Compute the current streak (consecutive completed days up to today).
-  int streakForHabit(Habit habit) {
-    final completed = _repository.completedDays(habit.id).toSet();
+  /// Compute the current streak (consecutive completed days up to [upTo]).
+  ///
+  /// If [upTo] is omitted, the streak is computed up to "today".
+  int streakForHabit(Habit habit, {DateTime? upTo}) {
+    final completed = _repository
+        .completedDays(habit.id)
+        .map((d) => DateTime(d.year, d.month, d.day))
+        .toSet();
     if (completed.isEmpty) return 0;
 
     var streak = 0;
-    var cursor = DateTime.now();
+    var cursor = upTo ?? DateTime.now();
 
     while (true) {
       final day = DateTime(cursor.year, cursor.month, cursor.day);
@@ -621,14 +678,17 @@ class HabitService {
   }
 
   /// Number of days completed in the last [days] days (inclusive of today).
-  int completionsInLastDays(Habit habit, int days) {
-    final today = DateTime.now();
-    final start = DateTime(today.year, today.month, today.day).subtract(Duration(days: days - 1));
+  int completionsInLastDays(Habit habit, int days, {DateTime? upTo}) {
+    final end = upTo != null
+        ? DateTime(upTo.year, upTo.month, upTo.day)
+        : DateTime.now();
+    final start = DateTime(end.year, end.month, end.day)
+        .subtract(Duration(days: days - 1));
 
     final completed = _repository
         .completedDays(habit.id)
         .map((d) => DateTime(d.year, d.month, d.day))
-        .where((d) => !d.isBefore(start) && !d.isAfter(today))
+        .where((d) => !d.isBefore(start) && !d.isAfter(end))
         .toSet();
 
     return completed.length;

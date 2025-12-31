@@ -63,27 +63,67 @@ class _AuthSectionState extends State<AuthSection> {
               profile['display_name'] as String? ?? _displayNameController.text;
         }
 
-        return Card(
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            gradient: const LinearGradient(
+              colors: [Color(0xFF0B1120), Color(0xFF111827)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            border: Border.all(color: const Color(0xFF6366F1).withOpacity(0.5)),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF6366F1).withOpacity(0.4),
+                blurRadius: 24,
+                spreadRadius: -8,
+                offset: const Offset(0, 16),
+              ),
+            ],
+          ),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Authentication',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Neon Habits',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _isLogin ? 'Welcome back ✨' : 'Let\'s get you glowing ✨',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white.withOpacity(0.7),
+                          ),
+                        ),
+                      ],
                     ),
-                    if (user != null) Text(user.email ?? '', style: const TextStyle(fontSize: 12)),
+                    if (user != null)
+                      Text(
+                        user.email ?? '',
+                        style: const TextStyle(fontSize: 12),
+                      ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 if (state.error != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
-                    child: Text(state.error!, style: const TextStyle(color: Colors.red)),
+                    child: Text(
+                      state.error!,
+                      style: const TextStyle(color: Colors.redAccent),
+                    ),
                   ),
                 if (user == null) ...[
                   TextField(
@@ -91,13 +131,13 @@ class _AuthSectionState extends State<AuthSection> {
                     decoration: const InputDecoration(labelText: 'Email'),
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   TextField(
                     controller: _passwordController,
                     decoration: const InputDecoration(labelText: 'Password'),
                     obscureText: true,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       Switch(
@@ -111,7 +151,7 @@ class _AuthSectionState extends State<AuthSection> {
                       Text(_isLogin ? 'Login' : 'Sign up'),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: isLoading ? null : _submitAuth,
                     child: Text(_isLogin ? 'Login' : 'Sign up'),
@@ -121,7 +161,7 @@ class _AuthSectionState extends State<AuthSection> {
                     controller: _displayNameController,
                     decoration: const InputDecoration(labelText: 'Display name'),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   ElevatedButton(
                     onPressed: isLoading ? null : _saveProfile,
                     child: const Text('Save profile'),
@@ -133,8 +173,11 @@ class _AuthSectionState extends State<AuthSection> {
                       style: const TextStyle(fontSize: 12),
                     ),
                   ],
-                  const SizedBox(height: 8),
-                  TextButton(onPressed: isLoading ? null : _signOut, child: const Text('Sign out')),
+                  const SizedBox(height: 12),
+                  TextButton(
+                    onPressed: isLoading ? null : _signOut,
+                    child: const Text('Sign out'),
+                  ),
                 ],
               ],
             ),

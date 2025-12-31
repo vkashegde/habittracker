@@ -260,6 +260,12 @@
       "languageVersion": "3.8"
     },
     {
+      "name": "flutter_localizations",
+      "rootUri": "file:///C:/Users/vkash/Downloads/flutter_sdk_3.27.1-stable/flutter/packages/flutter_localizations",
+      "packageUri": "lib/",
+      "languageVersion": "3.8"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///C:/Users/vkash/Downloads/flutter_sdk_3.27.1-stable/flutter/packages/flutter_test",
       "packageUri": "lib/",
@@ -336,6 +342,12 @@
       "rootUri": "file:///C:/Users/vkash/AppData/Local/Pub/Cache/hosted/pub.dev/http_parser-4.1.2",
       "packageUri": "lib/",
       "languageVersion": "3.4"
+    },
+    {
+      "name": "intl",
+      "rootUri": "file:///C:/Users/vkash/AppData/Local/Pub/Cache/hosted/pub.dev/intl-0.20.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
     },
     {
       "name": "io",
@@ -686,6 +698,30 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "syncfusion_flutter_calendar",
+      "rootUri": "file:///C:/Users/vkash/AppData/Local/Pub/Cache/hosted/pub.dev/syncfusion_flutter_calendar-32.1.21",
+      "packageUri": "lib/",
+      "languageVersion": "3.7"
+    },
+    {
+      "name": "syncfusion_flutter_core",
+      "rootUri": "file:///C:/Users/vkash/AppData/Local/Pub/Cache/hosted/pub.dev/syncfusion_flutter_core-32.1.21",
+      "packageUri": "lib/",
+      "languageVersion": "3.7"
+    },
+    {
+      "name": "syncfusion_flutter_datepicker",
+      "rootUri": "file:///C:/Users/vkash/AppData/Local/Pub/Cache/hosted/pub.dev/syncfusion_flutter_datepicker-32.1.21",
+      "packageUri": "lib/",
+      "languageVersion": "3.7"
+    },
+    {
+      "name": "syncfusion_localizations",
+      "rootUri": "file:///C:/Users/vkash/AppData/Local/Pub/Cache/hosted/pub.dev/syncfusion_localizations-32.1.21",
+      "packageUri": "lib/",
+      "languageVersion": "3.7"
+    },
+    {
       "name": "term_glyph",
       "rootUri": "file:///C:/Users/vkash/AppData/Local/Pub/Cache/hosted/pub.dev/term_glyph-1.2.2",
       "packageUri": "lib/",
@@ -696,6 +732,12 @@
       "rootUri": "file:///C:/Users/vkash/AppData/Local/Pub/Cache/hosted/pub.dev/test_api-0.7.7",
       "packageUri": "lib/",
       "languageVersion": "3.5"
+    },
+    {
+      "name": "timezone",
+      "rootUri": "file:///C:/Users/vkash/AppData/Local/Pub/Cache/hosted/pub.dev/timezone-0.10.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "timing",

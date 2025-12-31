@@ -24,15 +24,17 @@ class HabitInsightsApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
-      home: const Scaffold(
+      home: Scaffold(
         body: SafeArea(
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _NetworkStatusText(),
-                SizedBox(height: 16),
-                HabitInsightsWidget(),
+                const _NetworkStatusText(),
+                const SizedBox(height: 16),
+                HabitInsightsWidget(
+                  selectedDay: DateTime.now(),
+                ),
               ],
             ),
           ),
