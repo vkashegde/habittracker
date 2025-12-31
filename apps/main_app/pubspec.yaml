@@ -25,6 +25,7 @@ dependencies:
   network_layer:
     path: ../../packages/network_layer
   supabase_flutter: ^2.12.0
+  shared_preferences: ^2.3.2
 
 dev_dependencies:
   flutter_test:

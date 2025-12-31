@@ -33,19 +33,97 @@ class _HabitCheckinWidgetState extends State<HabitCheckinWidget> {
             if (todayHabits.isEmpty)
               const Text('No habits configured.'),
             for (final status in todayHabits)
-              CheckboxListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(status.habit.name),
-                subtitle: Text(status.habit.description),
-                value: status.completed,
-                onChanged: (_) {
-                  setState(() {
-                    habitService.toggleHabitForToday(status.habit);
-                  });
-                },
-              ),
+              switch (status.habit.type) {
+                HabitType.boolean => CheckboxListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(status.habit.name),
+                    subtitle: Text(status.habit.description),
+                    value: status.completed,
+                    onChanged: (_) {
+                      setState(() {
+                        habitService.toggleHabitForToday(status.habit);
+                      });
+                    },
+                  ),
+                HabitType.count ||
+                HabitType.duration =>
+                  _AmountHabitTile(
+                    status: status,
+                    onChanged: (newAmount) {
+                      setState(() {
+                        habitService.setAmountForToday(status.habit, newAmount);
+                      });
+                    },
+                  ),
+              },
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Tile for counter/timer-style habits (e.g. water glasses, meditation minutes).
+class _AmountHabitTile extends StatelessWidget {
+  const _AmountHabitTile({
+    required this.status,
+    required this.onChanged,
+  });
+
+  final TodayHabitStatus status;
+  final ValueChanged<int> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final habit = status.habit;
+    final target = habit.dailyTarget;
+    final amount = status.amount;
+
+    final isCount = habit.type == HabitType.count;
+    final step = isCount ? 1 : 5;
+
+    String progressText;
+    if (target != null && target > 0) {
+      progressText = '$amount / $target ${isCount ? 'count' : 'min'}';
+    } else {
+      progressText = '$amount ${isCount ? 'count' : 'min'}';
+    }
+
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      title: Text(habit.name),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(habit.description),
+          const SizedBox(height: 4),
+          Text(
+            progressText,
+            style: const TextStyle(fontSize: 12),
+          ),
+        ],
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.remove),
+            onPressed: amount > 0
+                ? () {
+                    final next = (amount - step).clamp(0, 1000000);
+                    onChanged(next);
+                  }
+                : null,
+          ),
+          Text('$amount'),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              final next = (amount + step).clamp(0, 1000000);
+              onChanged(next);
+            },
+          ),
+        ],
       ),
     );
   }

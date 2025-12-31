@@ -1,1 +1,3 @@
 apps/main_app/.env
+.dart_tool/
+.dart_tool/package_graph.json

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:main_app/cubits/auth_cubit.dart';
 import 'package:main_app/cubits/habit_tracker_cubit.dart';
+import 'package:main_app/habit_persistence.dart';
 import 'package:main_app/ui/auth.dart';
 import 'package:main_app/ui/dashboard.dart';
 import 'package:main_app/ui/splash.dart';
@@ -22,6 +23,10 @@ Future<void> main() async {
   }
 
   await supa.Supabase.initialize(url: url, anonKey: anonKey);
+
+  // Load any locally cached / previously synced habit state before showing UI.
+  await HabitPersistence.loadInitialState();
+
   runApp(const MainApp());
 }
 
