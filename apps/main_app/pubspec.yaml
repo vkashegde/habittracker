@@ -1,0 +1,39 @@
+name: main_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.10.1
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.4
+  bloc: ^8.1.4
+  freezed_annotation: ^2.4.1
+  equatable: ^2.0.5
+  flutter_dotenv: ^5.1.0
+  shared:
+    path: ../../packages/shared
+  habit_checkin_app:
+    path: ../habit_tracking
+  habit_insights_app:
+    path: ../habit_insights
+  network_layer:
+    path: ../../packages/network_layer
+  supabase_flutter: ^2.12.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.8
+  freezed: ^2.5.2
+
+flutter:
+  uses-material-design: true
+  assets:
+    - .env

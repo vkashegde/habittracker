@@ -1,0 +1,14 @@
+name: melos_example
+publish_to: none
+
+environment:
+  sdk: ^3.10.1
+
+workspace:
+  - apps/main_app
+  - apps/habit_tracking
+  - apps/habit_insights
+  - packages/shared
+  - packages/network_layer
+dev_dependencies:
+  melos: ^7.3.0

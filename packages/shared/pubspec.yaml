@@ -1,0 +1,23 @@
+name: shared
+description: Shared Dart library used by the Flutter apps in this Melos workspace.
+version: 0.1.0
+publish_to: "none"
+
+
+environment:
+  sdk: ^3.10.1
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  supabase_flutter: ^2.12.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: false
+
+

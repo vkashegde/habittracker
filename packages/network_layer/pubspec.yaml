@@ -1,0 +1,14 @@
+name: network_layer
+description: Shared network abstraction used by all apps in the melos_example workspace.
+version: 0.1.0
+publish_to: "none"
+
+environment:
+  sdk: ^3.10.1
+
+resolution: workspace
+
+dependencies:
+
+dev_dependencies:
+  lints: ^6.0.0

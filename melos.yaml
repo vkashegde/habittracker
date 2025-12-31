@@ -1,0 +1,16 @@
+name: melos_example
+
+packages:
+  - apps/*
+  - packages/*
+
+scripts:
+  pub:get:
+    run: melos exec -- flutter pub get
+    description: Run `flutter pub get` in all Flutter app packages.
+
+  analyze:
+    run: melos exec -- flutter analyze
+    description: Run `flutter analyze` in all Flutter app packages.
+
+
