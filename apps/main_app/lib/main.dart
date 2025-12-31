@@ -7,6 +7,7 @@ import 'package:main_app/cubits/auth_cubit.dart';
 import 'package:main_app/cubits/habit_tracker_cubit.dart';
 import 'package:main_app/ui/auth.dart';
 import 'package:main_app/ui/dashboard.dart';
+import 'package:main_app/ui/splash.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
 Future<void> main() async {
@@ -61,29 +62,13 @@ class _AuthGateState extends State<_AuthGate> {
       builder: (context, state) {
         switch (state.status) {
           case AuthStatus.loading:
-            return const _SplashScreen();
+            return const SplashScreen();
           case AuthStatus.unauthenticated:
             return const _AuthScreen();
           case AuthStatus.authenticated:
             return const DashboardScreen();
         }
       },
-    );
-  }
-}
-
-class _SplashScreen extends StatelessWidget {
-  const _SplashScreen();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [CircularProgressIndicator(), SizedBox(height: 12), Text('Loading...')],
-        ),
-      ),
     );
   }
 }
